@@ -1,0 +1,5 @@
+packageName: ham-resource-discoverer
+defaultChannel: alpha
+channels:
+  - name: alpha
+    currentCSV: ham-resource-discoverer.v0.1.0
