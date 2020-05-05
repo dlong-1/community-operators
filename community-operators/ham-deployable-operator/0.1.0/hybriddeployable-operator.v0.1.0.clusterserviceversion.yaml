@@ -5,8 +5,8 @@ metadata:
     alm-examples: |-
       [
         {
-          "apiVersion":"app.ibm.com/v1alpha1",
-          "kind":"Hybriddeployable",
+          "apiVersion":"core.hybridapp.io/v1alpha1",
+          "kind":"HybridDeployable",
           "metadata":{
             "name":"simple"
           },
@@ -32,7 +32,7 @@ metadata:
     capabilities: Seamless Upgrades
     categories: Integration & Delivery, OpenShift Optional
     certified: "false"
-    createdAt: 2020-03-02 00:00:00
+    createdAt: 2020-05-01 00:00:00
     containerImage: quay.io/hybridappio/ham-deployable-operator@sha256:e6db11d5812e89310b91d4810619953cdaa66a5f209ecd862e8db4d6aa56c6e8
     description: Hybrid Deployable Operator for Cloudpak for Multicloud Manager
     repository: https://github.com/hybridapp-io/ham-deployable-operator
@@ -65,7 +65,7 @@ spec:
       mediatype: image/png
   customresourcedefinitions:
     owned:
-      - name: hybriddeployables.app.ibm.com
+      - name: hybriddeployables.core.hybridapp.io
         displayName: HybridDeployable
         description: Placeholder hybriddeployable description
         kind: HybridDeployable
@@ -116,7 +116,7 @@ spec:
               verbs:
                 - update
             - apiGroups:
-                - app.ibm.com
+                - core.hybridapp.io
               resources:
                 - "*"
               verbs:
@@ -151,7 +151,7 @@ spec:
                     name: ham-deployable-operator
                     resources: {}
                 serviceAccountName: ham-deployable-operator
-  keywords: 
+  keywords:
     - hybridapp
     - application
     - model
