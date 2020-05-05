@@ -2,7 +2,6 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    operators.operatorframework.io/internal-objects: '["deployersets.core.hybridapp.io"]'
     alm-examples: |-
       [
         {
@@ -39,6 +38,7 @@ metadata:
     createdAt: 2020-05-01 00:00:00
     containerImage: quay.io/hybridappio/ham-resource-discoverer@sha256:c7be447f5e8dffa1106f02adf296d93b84030a362643a90e1bf4a455ffaf78af
     description: Deployer Operator for Cloudpak for Multicloud Manager
+    operators.operatorframework.io/internal-objects: '["deployersets.core.hybridapp.io"]'
     repository: https://github.com/hybridapp-io/ham-resource-discoverer
     support: hybridapp-io@googlegroups.com
   name: ham-resource-discoverer.v0.1.0
