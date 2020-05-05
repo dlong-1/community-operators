@@ -35,7 +35,7 @@ metadata:
     capabilities: Seamless Upgrades
     categories: Integration & Delivery, OpenShift Optional
     certified: "false"
-    createdAt: 2020-03-02 00:00:00
+    createdAt: 2020-05-01 00:00:00
     containerImage: quay.io/hybridappio/ham-resource-discoverer@sha256:c7be447f5e8dffa1106f02adf296d93b84030a362643a90e1bf4a455ffaf78af
     description: Deployer Operator for Cloudpak for Multicloud Manager
     repository: https://github.com/hybridapp-io/ham-resource-discoverer
