@@ -49,6 +49,9 @@ spec:
     ## Prerequisites for enabling this Operator
     Requires Cloud Pak for Multicloud Management 1.4+
   maturity: alpha
+  replaces: ""
+  skips: []
+  minKubeVersion: 1.16.0
   provider:
     name: IBM
   links:
