@@ -71,7 +71,12 @@ spec:
         kind: HybridDeployable
         version: v1alpha1
         resources: []
-  required: []
+    required:
+      - description: Subscribe resources from a channel according to its package filters
+        displayName: Subscription
+        kind: Subscription
+        name: subscriptions.apps.open-cluster-management.io
+        version: v1
   install:
     strategy: deployment
     spec:
