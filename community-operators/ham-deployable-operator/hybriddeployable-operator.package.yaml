@@ -1,0 +1,5 @@
+channels:
+  - currentCSV: ham-deployable-operator.v0.1.0
+    name: alpha
+defaultChannel: alpha
+packageName: ham-deployable-operator
