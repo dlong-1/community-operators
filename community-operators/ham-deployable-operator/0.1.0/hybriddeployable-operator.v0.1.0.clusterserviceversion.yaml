@@ -51,7 +51,6 @@ spec:
   replaces: ""
   skips: []
   minKubeVersion: 1.16.0
-  keywords: []
   provider:
     name: IBM
   labels: {}
@@ -152,6 +151,12 @@ spec:
                     name: ham-deployable-operator
                     resources: {}
                 serviceAccountName: ham-deployable-operator
+  keywords: 
+    - hybridapp
+    - application
+    - model
+    - multicluster
+    - multicloud
   maintainers:
     - email: hybridapp-io@googlegroups.com
       name: Hybrid Application Model Group
