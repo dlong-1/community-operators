@@ -9,7 +9,7 @@ spec:
     listKind: DeployerList
     plural: deployers
     singular: deployer
-  scope: Namespaced
+  scope: Cluster
   subresources:
     status: {}
   validation:
