@@ -1,34 +1,36 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: hybriddeployables.core.hybridapp.io
+  name: deployables.core.hybridapp.io
+  labels:
+    app.kubernetes.io/instance: ham-deployable-operator
+    app.kubernetes.io/managed-by: ham-deployable-operator
+    app.kubernetes.io/name: hybridApplicationModel
 spec:
   group: core.hybridapp.io
   names:
-    kind: HybridDeployable
-    listKind: HybridDeployableList
-    plural: hybriddeployables
+    kind: Deployable
+    listKind: DeployableList
+    plural: deployables
     shortNames:
-      - hdpl
-    singular: hybriddeployable
+    - hdpl
+    singular: deployable
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: HybridDeployable is the Schema for the hybriddeployables API
+      description: Deployable is the Schema for the deployables API
       properties:
         apiVersion:
-          description:
-            "APIVersion defines the versioned schema of this representation
+          description: 'APIVersion defines the versioned schema of this representation
             of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
           type: string
         kind:
-          description:
-            "Kind is a string value representing the REST resource this
+          description: 'Kind is a string value representing the REST resource this
             object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
           type: object
@@ -37,16 +39,14 @@ spec:
           properties:
             dependencies:
               items:
-                description:
-                  ObjectReference contains enough information to let you
+                description: ObjectReference contains enough information to let you
                   inspect or modify the referred object.
                 properties:
                   apiVersion:
                     description: API version of the referent.
                     type: string
                   fieldPath:
-                    description:
-                      'If referring to a piece of an object instead of
+                    description: 'If referring to a piece of an object instead of
                       an entire object, this string should contain a valid JSON/Go
                       field access statement, such as desiredState.manifest.containers[2].
                       For example, if the object reference is to a container within
@@ -59,21 +59,20 @@ spec:
                       subject to change in the future.'
                     type: string
                   kind:
-                    description: "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+                    description: 'Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
                     type: string
                   name:
-                    description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                     type: string
                   namespace:
-                    description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"
+                    description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                     type: string
                   resourceVersion:
-                    description:
-                      "Specific resourceVersion to which this reference
-                      is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency"
+                    description: 'Specific resourceVersion to which this reference
+                      is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency'
                     type: string
                   uid:
-                    description: "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids"
+                    description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                     type: string
                 type: object
               type: array
@@ -85,42 +84,36 @@ spec:
                   template:
                     type: object
                 required:
-                  - template
+                - template
                 type: object
               type: array
             placement:
               properties:
                 deployerLabels:
-                  description:
-                    A label selector is a label query over a set of resources.
+                  description: A label selector is a label query over a set of resources.
                     The result of matchLabels and matchExpressions are ANDed. An empty
                     label selector matches all objects. A null label selector matches
                     no objects.
                   properties:
                     matchExpressions:
-                      description:
-                        matchExpressions is a list of label selector requirements.
+                      description: matchExpressions is a list of label selector requirements.
                         The requirements are ANDed.
                       items:
-                        description:
-                          A label selector requirement is a selector that
+                        description: A label selector requirement is a selector that
                           contains values, a key, and an operator that relates the
                           key and values.
                         properties:
                           key:
-                            description:
-                              key is the label key that the selector applies
+                            description: key is the label key that the selector applies
                               to.
                             type: string
                           operator:
-                            description:
-                              operator represents a key's relationship
+                            description: operator represents a key's relationship
                               to a set of values. Valid operators are In, NotIn, Exists
                               and DoesNotExist.
                             type: string
                           values:
-                            description:
-                              values is an array of string values. If the
+                            description: values is an array of string values. If the
                               operator is In or NotIn, the values array must be non-empty.
                               If the operator is Exists or DoesNotExist, the values
                               array must be empty. This array is replaced during a
@@ -129,15 +122,14 @@ spec:
                               type: string
                             type: array
                         required:
-                          - key
-                          - operator
+                        - key
+                        - operator
                         type: object
                       type: array
                     matchLabels:
                       additionalProperties:
                         type: string
-                      description:
-                        matchLabels is a map of {key,value} pairs. A single
+                      description: matchLabels is a map of {key,value} pairs. A single
                         {key,value} in the matchLabels map is equivalent to an element
                         of matchExpressions, whose key field is "key", the operator
                         is "In", and the values array contains only "value". The requirements
@@ -146,16 +138,14 @@ spec:
                   type: object
                 deployers:
                   items:
-                    description:
-                      ObjectReference contains enough information to let
+                    description: ObjectReference contains enough information to let
                       you inspect or modify the referred object.
                     properties:
                       apiVersion:
                         description: API version of the referent.
                         type: string
                       fieldPath:
-                        description:
-                          'If referring to a piece of an object instead
+                        description: 'If referring to a piece of an object instead
                           of an entire object, this string should contain a valid
                           JSON/Go field access statement, such as desiredState.manifest.containers[2].
                           For example, if the object reference is to a container within
@@ -168,35 +158,32 @@ spec:
                           is subject to change in the future.'
                         type: string
                       kind:
-                        description: "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+                        description: 'Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
                         type: string
                       name:
-                        description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                         type: string
                       namespace:
-                        description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"
+                        description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                         type: string
                       resourceVersion:
-                        description:
-                          "Specific resourceVersion to which this reference
-                          is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency"
+                        description: 'Specific resourceVersion to which this reference
+                          is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency'
                         type: string
                       uid:
-                        description: "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids"
+                        description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                         type: string
                     type: object
                   type: array
                 placementRef:
-                  description:
-                    ObjectReference contains enough information to let
+                  description: ObjectReference contains enough information to let
                     you inspect or modify the referred object.
                   properties:
                     apiVersion:
                       description: API version of the referent.
                       type: string
                     fieldPath:
-                      description:
-                        'If referring to a piece of an object instead of
+                      description: 'If referring to a piece of an object instead of
                         an entire object, this string should contain a valid JSON/Go
                         field access statement, such as desiredState.manifest.containers[2].
                         For example, if the object reference is to a container within
@@ -209,21 +196,20 @@ spec:
                         subject to change in the future.'
                       type: string
                     kind:
-                      description: "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+                      description: 'Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
                       type: string
                     name:
-                      description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"
+                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                       type: string
                     namespace:
-                      description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"
+                      description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                       type: string
                     resourceVersion:
-                      description:
-                        "Specific resourceVersion to which this reference
-                        is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency"
+                      description: 'Specific resourceVersion to which this reference
+                        is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency'
                       type: string
                     uid:
-                      description: "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids"
+                      description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                       type: string
                   type: object
               type: object
@@ -241,16 +227,14 @@ spec:
                     type: string
                   outputs:
                     items:
-                      description:
-                        ObjectReference contains enough information to
+                      description: ObjectReference contains enough information to
                         let you inspect or modify the referred object.
                       properties:
                         apiVersion:
                           description: API version of the referent.
                           type: string
                         fieldPath:
-                          description:
-                            'If referring to a piece of an object instead
+                          description: 'If referring to a piece of an object instead
                             of an entire object, this string should contain a valid
                             JSON/Go field access statement, such as desiredState.manifest.containers[2].
                             For example, if the object reference is to a container
@@ -264,21 +248,20 @@ spec:
                             future.'
                           type: string
                         kind:
-                          description: "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+                          description: 'Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
                           type: string
                         name:
-                          description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                           type: string
                         namespace:
-                          description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"
+                          description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
                           type: string
                         resourceVersion:
-                          description:
-                            "Specific resourceVersion to which this reference
-                            is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency"
+                          description: 'Specific resourceVersion to which this reference
+                            is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency'
                           type: string
                         uid:
-                          description: "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids"
+                          description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                           type: string
                       type: object
                     type: array
@@ -290,13 +273,13 @@ spec:
                   resourceStatus:
                     type: object
                 required:
-                  - phase
+                - phase
                 type: object
               type: object
           type: object
       type: object
   version: v1alpha1
   versions:
-    - name: v1alpha1
-      served: true
-      storage: true
+  - name: v1alpha1
+    served: true
+    storage: true
