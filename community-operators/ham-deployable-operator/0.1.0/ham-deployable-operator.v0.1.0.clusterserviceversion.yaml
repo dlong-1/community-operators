@@ -86,11 +86,17 @@ spec:
         statusDescriptors: []
         resources: []
         displayName: DeployerSet
+    required:
+    - name: deployers.core.hybridapp.io
+      version: v1alpha1
+      kind: Deployer
+      displayName: Deployer
+      description: Deployer is the Schema for the deployers API
   displayName: Hybrid Application Model - Deployable Operator
   description: |
     This operator is part of the Multicloud Manager Hybrid Application which introduces infrasctructure management on top of Multicloud Manager's cluster model.
     ## Prerequisites for enabling this Operator
-    Requires Cloud Pak for Multicloud Management 1.4+
+    Requires Multicluster Subscription Operator
   links:
     - name: Hybrid Application Model
       url: https://github.com/hybridapp-io
@@ -102,6 +108,14 @@ spec:
     spec:
       clusterPermissions:
       - rules:
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - ibm-restricted-scc
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - use
         - apiGroups:
           - ""
           resources:
@@ -146,7 +160,7 @@ spec:
         - apiGroups:
           - apps
           resourceNames:
-          - deployer-operator
+          - ham-deployable-operator
           resources:
           - deployments/finalizers
           verbs:
@@ -177,6 +191,14 @@ spec:
           - list
           - patch
           - update
+          - watch
+        - apiGroups:
+          - '*'
+          resources:
+          - '*'
+          verbs:
+          - get
+          - list
           - watch
         serviceAccountName: ham-deployable-operator
       deployments:
