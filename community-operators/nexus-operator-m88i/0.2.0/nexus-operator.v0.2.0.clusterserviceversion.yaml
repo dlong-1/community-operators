@@ -12,11 +12,10 @@ metadata:
           },
           "spec": {
             "networking": {
-              "expose": true
+              "expose": false
             },
             "persistence": {
-              "persistent": true,
-              "volumeSize": "10Gi"
+              "persistent": false
             },
             "replicas": 1,
             "resources": {
@@ -36,82 +35,56 @@ metadata:
     capabilities: Basic Install
     categories: Developer Tools
     certified: "false"
-    containerImage: quay.io/m88i/nexus-operator:0.1.0
+    containerImage: quay.io/m88i/nexus-operator:0.2.0
     createdAt: "2019-11-16T13:12:22Z"
     description: Nexus Operator to deploy and manage Nexus 3.x servers
     repository: https://github.com/m88i/nexus-operator
     support: m88i Labs
     tectonic-visibility: ocs
-  labels:
-    nexus-operator: "true"
-  name: nexus-operator.v0.1.0
+  name: nexus-operator.v0.2.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: Representation of a Nexus 3.x server
+    - description: Nexus custom resource to deploy the Nexus Server
       displayName: Nexus
       kind: Nexus
       name: nexus.apps.m88i.io
       resources:
       - kind: Deployment
-        name: ""
-        version: apps/v1
-      - kind: Service
-        name: ""
+        name: A Kubernetes Deployment
         version: v1
       - kind: PersistentVolumeClaim
-        name: ""
+        name: A Kubernetes PersistentVolumeClaim
+        version: v1
+      - kind: Service
+        name: A Kubernetes Service
         version: v1
       specDescriptors:
-      - description: Replicas
-        displayName: Replicas
-        path: replicas
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:podCount
-      - description: Image
+      - description: 'Full image tag name for this specific deployment Default: docker.io/sonatype/nexus3:latest'
         displayName: Image
         path: image
         x-descriptors:
         - urn:alm:descriptor:io.kubernetes:image
-      - description: Resources
+      - description: 'Number of pods replicas desired Default: 1'
+        displayName: Replicas
+        path: replicas
+      - description: Defined Resources for the Nexus instance
         displayName: Resources
         path: resources
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:resourceRequirements
-      - description: Volume Size
-        displayName: Volume Size
-        path: persistence.volumeSize
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:label
-      - description: Indicates if is using a Red Hat certifed image or not
+      - description: 'If you have access to Red Hat Container Catalog, turn this to
+          true to use the certified image provided by Sonatype Default: false'
         displayName: Use Red Hat Image
         path: useRedHatImage
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
-      - description: Indicates if Nexus service should be exposed
-        displayName: Expose
-        path: networking.expose
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
-      - description: Networking expose method
-        displayName: Expose As
-        path: networking.exposeAs
       statusDescriptors:
-      - description: Nexus server deployment conditions
-        displayName: Deployment Conditions
-        path: deploymentStatus.conditions
-        x-descriptors:
-        - urn:alm:descriptor:io.kubernetes.conditions
-      - description: Nexus Operator Status
-        displayName: Nexus Operator Status
-        path: nexusStatus
-      - description: External Route
-        displayName: External Route
-        path: nexusRoute
-        x-descriptors:
-        - urn:alm:descriptor:org.w3:link
+      - description: Condition status for the Nexus deployment
+        displayName: appsv1.DeploymentStatus
+        path: deploymentStatus
       version: v1alpha1
   description: |-
     Creates a new Nexus 3.x deployment in a Kubernetes cluster. Will help DevOps to have a quick Nexus application exposed to the world that can be used in a CI/CD process:
@@ -123,7 +96,7 @@ spec:
     After installing it, you will have to grab the `admin` user password from the deployed container. There's a file auto generated in `/nexus-data/admin.password`.
     Use `cat` to read the file and view the password. Use it to login for the first time and follow the on screen instructions to have the Nexus server ready for use.
 
-    If you experience any issues or have any ideas for new features, please [file an issue in our Github repository](https://github.com/m88i/nexus-operator/issues).
+    If you experience any issues or have any ideas for new features, please [file an issue in our Github repository](https://github.com/m88i/nexus-operator/issues) or send an email to our maillist: [nexus-operator@googlegroups.com](mailto:nexus-operator@googlegroups.com)
 
     *Please note that the operator is an individual work and it's not provided nor supported by Sonatype.*
   displayName: Nexus Operator
@@ -159,7 +132,7 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: nexus-operator
-                image: quay.io/m88i/nexus-operator:0.1.0
+                image: quay.io/m88i/nexus-operator:0.2.0
                 imagePullPolicy: Always
                 name: nexus-operator
                 resources: {}
@@ -171,21 +144,22 @@ spec:
           resources:
           - pods
           - services
+          - services/finalizers
           - endpoints
           - persistentvolumeclaims
           - events
           - configmaps
           - secrets
-          - limitranges
-          - componentstatuses
-          - persistentvolumes
-          - bindings
           - replicationcontrollers
-          - resourcequotas
           - podtemplates
-          - serviceaccounts
           verbs:
-          - '*'
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         - apiGroups:
           - apps
           resources:
@@ -194,7 +168,13 @@ spec:
           - replicasets
           - statefulsets
           verbs:
-          - '*'
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         - apiGroups:
           - monitoring.coreos.com
           resources:
@@ -211,9 +191,16 @@ spec:
           verbs:
           - update
         - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
           - apps
           resources:
           - replicasets
+          - deployments
           verbs:
           - get
         - apiGroups:
@@ -221,19 +208,37 @@ spec:
           resources:
           - '*'
           verbs:
-          - '*'
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         - apiGroups:
           - route.openshift.io
           resources:
           - routes
           verbs:
-          - '*'
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         - apiGroups:
           - networking.k8s.io
           resources:
           - ingresses
           verbs:
-          - '*'
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         serviceAccountName: nexus-operator
     strategy: deployment
   installModes:
@@ -256,16 +261,18 @@ spec:
   - repository
   - repository manager
   - dev tools
-  - ""
+  labels:
+    name: nexus-operator
   links:
   - name: Documentation
     url: https://github.com/m88i/nexus-operator/blob/master/README.md
-  - name: Source
+  - name: Nexus Operator source code repository
     url: https://github.com/m88i/nexus-operator
   maintainers:
-  - email: ricardozanini@gmail.com
+  - email: nexus-operator@googlegroups.com
     name: m88i Labs
   maturity: alpha
+  minKubeVersion: 1.11.0
   provider:
     name: m88i Labs
-  version: 0.1.0
+  version: 0.2.0
